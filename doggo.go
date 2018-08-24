@@ -2,10 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"text/template"
 	"time"
 )
 
@@ -39,7 +39,12 @@ func respond(writer http.ResponseWriter, request *http.Request) {
 	image := Image{}
 	responseJsonBytes := []byte(responseJson)
 	err = json.Unmarshal(responseJsonBytes, &image)
-	fmt.Fprintf(writer, image.Data.OriginalUrl)
+	if err != nil {
+		log.Fatal("Invalid Giphy response JSON: ", err)
+		return
+	}
+	pageTemplate := template.Must(template.ParseFiles("templates/page.tmpl"))
+	pageTemplate.Execute(writer, image)
 }
 
 func main() {
