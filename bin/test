@@ -6,3 +6,5 @@ if [ ! $(gofmt -l . | wc -l) = 0 ]; then
     gofmt -d .
     exit 1
 fi
+
+go test
